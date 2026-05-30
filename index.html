@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DevCenter Bump — Découvrez des serveurs Discord</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg-900:   #050810;
+      --bg-800:   #090d1a;
+      --bg-700:   #0d1224;
+      --bg-600:   #111830;
+      --bg-card:  #0f1628;
+      --border:   #1e2d52;
+      --blue-500: #3b82f6;
+      --blue-400: #60a5fa;
+      --blue-300: #93c5fd;
+      --blue-600: #2563eb;
+      --blue-glow:#1d4ed8;
+      --text-100: #f0f4ff;
+      --text-300: #a8b8d8;
+      --text-500: #5a7096;
+      --accent:   #06b6d4;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg-900);
+      color: var(--text-100);
+      font-family: 'DM Sans', sans-serif;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ── Background mesh ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 80% 50% at 20% 0%, rgba(37,99,235,.18) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 40% at 80% 100%, rgba(6,182,212,.1) 0%, transparent 60%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ── Navbar ── */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 2rem;
+      height: 64px;
+      background: rgba(5,8,16,.85);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: .6rem;
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 1.25rem;
+      color: var(--text-100);
+      text-decoration: none;
+      letter-spacing: -.02em;
+    }
+
+    .logo-icon {
+      width: 32px; height: 32px;
+      background: linear-gradient(135deg, var(--blue-500), var(--accent));
+      border-radius: 8px;
+      display: grid;
+      place-items: center;
+      font-size: .9rem;
+    }
+
+    .logo span { color: var(--blue-400); }
+
+    .nav-links { display: flex; align-items: center; gap: 1.5rem; }
+
+    .nav-links a {
+      color: var(--text-300);
+      text-decoration: none;
+      font-size: .9rem;
+      transition: color .2s;
+    }
+    .nav-links a:hover { color: var(--text-100); }
+
+    .btn {
+      padding: .5rem 1.25rem;
+      border-radius: 8px;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 500;
+      font-size: .875rem;
+      cursor: pointer;
+      border: none;
+      transition: all .2s;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: .4rem;
+    }
+
+    .btn-primary {
+      background: var(--blue-500);
+      color: #fff;
+      box-shadow: 0 0 20px rgba(59,130,246,.35);
+    }
+    .btn-primary:hover {
+      background: var(--blue-400);
+      box-shadow: 0 0 30px rgba(59,130,246,.55);
+      transform: translateY(-1px);
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--text-300);
+      border: 1px solid var(--border);
+    }
+    .btn-ghost:hover {
+      border-color: var(--blue-500);
+      color: var(--blue-400);
+    }
+
+    /* ── Hero ── */
+    .hero {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      padding: 5rem 2rem 3rem;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: .5rem;
+      padding: .35rem 1rem;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: rgba(59,130,246,.08);
+      color: var(--blue-300);
+      font-size: .8rem;
+      font-weight: 500;
+      margin-bottom: 1.5rem;
+      letter-spacing: .04em;
+    }
+
+    .hero h1 {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(2.5rem, 6vw, 4.5rem);
+      font-weight: 800;
+      line-height: 1.1;
+      letter-spacing: -.03em;
+      margin-bottom: 1.25rem;
+    }
+
+    .hero h1 .gradient {
+      background: linear-gradient(135deg, var(--blue-400), var(--accent));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero p {
+      color: var(--text-300);
+      font-size: 1.1rem;
+      max-width: 520px;
+      margin: 0 auto 2rem;
+      line-height: 1.7;
+    }
+
+    .hero-actions { display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap; }
+
+    .stats-bar {
+      position: relative; z-index: 1;
+      display: flex;
+      justify-content: center;
+      gap: 3rem;
+      padding: 1.5rem 2rem 2rem;
+      flex-wrap: wrap;
+    }
+
+    .stat-item { text-align: center; }
+    .stat-value {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: var(--blue-400);
+    }
+    .stat-label { font-size: .8rem; color: var(--text-500); text-transform: uppercase; letter-spacing: .06em; }
+
+    /* ── Search ── */
+    .search-section {
+      position: relative; z-index: 1;
+      padding: 0 2rem 2rem;
+      max-width: 860px;
+      margin: 0 auto;
+    }
+
+    .search-bar {
+      display: flex;
+      align-items: center;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: .75rem 1rem;
+      gap: .75rem;
+      transition: border-color .2s, box-shadow .2s;
+    }
+    .search-bar:focus-within {
+      border-color: var(--blue-500);
+      box-shadow: 0 0 0 3px rgba(59,130,246,.15);
+    }
+
+    .search-bar input {
+      flex: 1;
+      background: none;
+      border: none;
+      outline: none;
+      color: var(--text-100);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 1rem;
+    }
+    .search-bar input::placeholder { color: var(--text-500); }
+
+    .search-icon { color: var(--text-500); font-size: 1.1rem; }
+
+    /* ── Tags ── */
+    .tags-section {
+      position: relative; z-index: 1;
+      padding: 0 2rem 2rem;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .tags-title {
+      font-family: 'Syne', sans-serif;
+      font-size: .75rem;
+      font-weight: 600;
+      color: var(--text-500);
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      margin-bottom: .75rem;
+    }
+
+    .tags-list { display: flex; flex-wrap: wrap; gap: .5rem; }
+
+    .tag {
+      padding: .35rem .85rem;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      background: var(--bg-700);
+      color: var(--text-300);
+      font-size: .8rem;
+      cursor: pointer;
+      transition: all .2s;
+      user-select: none;
+    }
+    .tag:hover, .tag.active {
+      border-color: var(--blue-500);
+      background: rgba(59,130,246,.1);
+      color: var(--blue-300);
+    }
+
+    /* ── Section title ── */
+    .section {
+      position: relative; z-index: 1;
+      padding: 1rem 2rem 3rem;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1.5rem;
+    }
+
+    .section-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--text-100);
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+    }
+
+    .section-title .dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: var(--blue-400);
+      box-shadow: 0 0 8px var(--blue-400);
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: .4; }
+    }
+
+    /* ── Server Grid ── */
+    .server-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1rem;
+    }
+
+    /* ── Server Card ── */
+    .server-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      transition: border-color .25s, transform .25s, box-shadow .25s;
+      animation: fadeUp .4s ease both;
+    }
+
+    .server-card:hover {
+      border-color: var(--blue-500);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 32px rgba(37,99,235,.15);
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .card-header { display: flex; align-items: flex-start; gap: .875rem; }
+
+    .server-icon {
+      width: 52px; height: 52px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--blue-600), var(--accent));
+      display: grid;
+      place-items: center;
+      font-size: 1.4rem;
+      flex-shrink: 0;
+      overflow: hidden;
+    }
+    .server-icon img { width: 100%; height: 100%; object-fit: cover; }
+
+    .card-info { flex: 1; min-width: 0; }
+
+    .card-name {
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: .975rem;
+      color: var(--text-100);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin-bottom: .2rem;
+    }
+
+    .card-meta {
+      display: flex;
+      align-items: center;
+      gap: .75rem;
+      font-size: .78rem;
+      color: var(--text-500);
+    }
+
+    .card-meta span { display: flex; align-items: center; gap: .25rem; }
+
+    .online-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: #22c55e;
+      display: inline-block;
+    }
+
+    .card-desc {
+      font-size: .855rem;
+      color: var(--text-300);
+      line-height: 1.6;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .card-tags { display: flex; flex-wrap: wrap; gap: .35rem; }
+
+    .card-tag {
+      padding: .2rem .6rem;
+      border-radius: 4px;
+      background: rgba(59,130,246,.12);
+      color: var(--blue-300);
+      font-size: .72rem;
+      font-weight: 500;
+    }
+
+    .card-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: .75rem;
+      border-top: 1px solid var(--border);
+      gap: .5rem;
+    }
+
+    .bump-info {
+      font-size: .78rem;
+      color: var(--text-500);
+      display: flex;
+      align-items: center;
+      gap: .35rem;
+    }
+
+    .btn-join {
+      padding: .45rem 1rem;
+      border-radius: 7px;
+      font-size: .8rem;
+      font-weight: 600;
+      background: var(--blue-500);
+      color: #fff;
+      border: none;
+      cursor: pointer;
+      transition: all .2s;
+      text-decoration: none;
+    }
+    .btn-join:hover {
+      background: var(--blue-400);
+      box-shadow: 0 4px 16px rgba(59,130,246,.4);
+    }
+
+    /* ── Empty state ── */
+    .empty {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 4rem 2rem;
+      color: var(--text-500);
+    }
+    .empty-icon { font-size: 3rem; margin-bottom: 1rem; }
+
+    /* ── Add Server Modal ── */
+    .modal-overlay {
+      display: none;
+      position: fixed; inset: 0; z-index: 200;
+      background: rgba(5,8,16,.85);
+      backdrop-filter: blur(8px);
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+    .modal-overlay.open { display: flex; }
+
+    .modal {
+      background: var(--bg-700);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 2rem;
+      width: 100%;
+      max-width: 480px;
+      animation: modalIn .25s ease;
+    }
+
+    @keyframes modalIn {
+      from { opacity: 0; transform: scale(.96) translateY(8px); }
+      to   { opacity: 1; transform: scale(1) translateY(0); }
+    }
+
+    .modal-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin-bottom: .5rem;
+    }
+    .modal-sub { color: var(--text-300); font-size: .875rem; margin-bottom: 1.5rem; line-height: 1.6; }
+
+    .form-group { margin-bottom: 1rem; }
+    .form-label { display: block; font-size: .8rem; color: var(--text-300); margin-bottom: .4rem; font-weight: 500; }
+
+    .form-input {
+      width: 100%;
+      background: var(--bg-900);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: .65rem .9rem;
+      color: var(--text-100);
+      font-family: 'DM Sans', sans-serif;
+      font-size: .9rem;
+      outline: none;
+      transition: border-color .2s;
+    }
+    .form-input:focus { border-color: var(--blue-500); }
+
+    textarea.form-input { resize: vertical; min-height: 80px; }
+
+    .modal-footer { display: flex; gap: .75rem; justify-content: flex-end; margin-top: 1.5rem; }
+
+    /* ── Discord OAuth btn ── */
+    .btn-discord {
+      background: #5865f2;
+      color: #fff;
+      font-weight: 600;
+      padding: .65rem 1.5rem;
+      border-radius: 9px;
+      border: none;
+      cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+      font-size: .9rem;
+      display: flex;
+      align-items: center;
+      gap: .6rem;
+      transition: all .2s;
+      text-decoration: none;
+    }
+    .btn-discord:hover { background: #4752c4; transform: translateY(-1px); }
+
+    /* ── Footer ── */
+    footer {
+      position: relative; z-index: 1;
+      text-align: center;
+      padding: 2rem;
+      color: var(--text-500);
+      font-size: .8rem;
+      border-top: 1px solid var(--border);
+      margin-top: 2rem;
+    }
+    footer a { color: var(--blue-400); text-decoration: none; }
+
+    /* ── Loader ── */
+    .loader {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 3rem;
+      grid-column: 1/-1;
+    }
+    .spinner {
+      width: 36px; height: 36px;
+      border: 3px solid var(--border);
+      border-top-color: var(--blue-400);
+      border-radius: 50%;
+      animation: spin .7s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── Toast ── */
+    .toast-container { position: fixed; bottom: 1.5rem; right: 1.5rem; z-index: 300; display: flex; flex-direction: column; gap: .5rem; }
+
+    .toast {
+      padding: .75rem 1.25rem;
+      border-radius: 10px;
+      font-size: .875rem;
+      font-weight: 500;
+      border: 1px solid;
+      animation: toastIn .3s ease;
+      max-width: 320px;
+    }
+    .toast.success { background: rgba(34,197,94,.12); border-color: rgba(34,197,94,.3); color: #86efac; }
+    .toast.error   { background: rgba(239,68,68,.12);  border-color: rgba(239,68,68,.3);  color: #fca5a5; }
+
+    @keyframes toastIn {
+      from { opacity: 0; transform: translateX(20px); }
+      to   { opacity: 1; transform: translateX(0); }
+    }
+
+    @media (max-width: 640px) {
+      nav { padding: 0 1rem; }
+      .nav-links a:not(.btn) { display: none; }
+      .hero { padding: 3rem 1rem 2rem; }
+      .stats-bar { gap: 1.5rem; }
+      .section, .search-section, .tags-section { padding-left: 1rem; padding-right: 1rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── Navbar ── -->
+<nav>
+  <a class="logo" href="#">
+    <div class="logo-icon">⚡</div>
+    DevCenter<span>Bump</span>
+  </a>
+  <div class="nav-links">
+    <a href="#">Serveurs</a>
+    <a href="#">Catégories</a>
+    <a href="https://devcenter24.github.io/devcenter-bump" target="_blank" class="btn btn-ghost">Ajouter mon serveur</a>
+    <a href="#" id="loginBtn" class="btn btn-primary">
+      <svg width="16" height="16" viewBox="0 0 127.14 96.36" fill="currentColor"><path d="M107.7,8.07A105.15,105.15,0,0,0,81.47,0a72.06,72.06,0,0,0-3.36,6.83A97.68,97.68,0,0,0,49,6.83,72.37,72.37,0,0,0,45.64,0,105.89,105.89,0,0,0,19.39,8.09C2.79,32.65-1.71,56.6.54,80.21h0A105.73,105.73,0,0,0,32.71,96.36,77.7,77.7,0,0,0,39.6,85.25a68.42,68.42,0,0,1-10.85-5.18c.91-.66,1.8-1.34,2.66-2a75.57,75.57,0,0,0,64.32,0c.87.71,1.76,1.39,2.66,2a68.68,68.68,0,0,1-10.87,5.19,77,77,0,0,0,6.89,11.1A105.25,105.25,0,0,0,126.6,80.22h0C129.24,52.84,122.09,29.11,107.7,8.07ZM42.45,65.69C36.18,65.69,31,60,31,53s5-12.74,11.43-12.74S54,46,53.89,53,48.84,65.69,42.45,65.69Zm42.24,0C78.41,65.69,73.25,60,73.25,53s5-12.74,11.44-12.74S96.23,46,96.12,53,91.08,65.69,84.69,65.69Z"/></svg>
+      Connexion
+    </a>
+  </div>
+</nav>
+
+<!-- ── Hero ── -->
+<header class="hero">
+  <div class="hero-badge">🚀 La liste de serveurs Discord francophone</div>
+  <h1>Découvrez des serveurs<br><span class="gradient">Discord incroyables</span></h1>
+  <p>Parcourez des milliers de serveurs Discord listés par leur communauté. Bumpez votre serveur toutes les 2h pour gagner en visibilité.</p>
+  <div class="hero-actions">
+    <a href="https://devcenter24.github.io/devcenter-bump" target="_blank" class="btn btn-primary">✦ Ajouter mon serveur</a>
+    <a href="#servers" class="btn btn-ghost">Parcourir →</a>
+  </div>
+</header>
+
+<!-- ── Stats ── -->
+<div class="stats-bar" id="statsBar">
+  <div class="stat-item">
+    <div class="stat-value" id="statServers">—</div>
+    <div class="stat-label">Serveurs listés</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-value" id="statBumps">—</div>
+    <div class="stat-label">Bumps aujourd'hui</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-value" id="statMembers">—</div>
+    <div class="stat-label">Membres cumulés</div>
+  </div>
+</div>
+
+<!-- ── Search ── -->
+<div class="search-section">
+  <div class="search-bar">
+    <span class="search-icon">🔍</span>
+    <input type="text" id="searchInput" placeholder="Rechercher un serveur..." />
+  </div>
+</div>
+
+<!-- ── Tags ── -->
+<div class="tags-section">
+  <div class="tags-title">Catégories populaires</div>
+  <div class="tags-list" id="tagsList">
+    <span class="tag active" data-tag="">Tous</span>
+    <span class="tag" data-tag="gaming">🎮 Gaming</span>
+    <span class="tag" data-tag="dev">💻 Dev</span>
+    <span class="tag" data-tag="anime">🌸 Anime</span>
+    <span class="tag" data-tag="musique">🎵 Musique</span>
+    <span class="tag" data-tag="art">🎨 Art</span>
+    <span class="tag" data-tag="crypto">📈 Crypto</span>
+    <span class="tag" data-tag="roleplay">📜 Roleplay</span>
+    <span class="tag" data-tag="entraide">🤝 Entraide</span>
+  </div>
+</div>
+
+<!-- ── Server list ── -->
+<main class="section" id="servers">
+  <div class="section-header">
+    <div class="section-title">
+      <span class="dot"></span>
+      Serveurs récemment bumpés
+    </div>
+    <span id="serverCount" style="font-size:.8rem;color:var(--text-500)"></span>
+  </div>
+  <div class="server-grid" id="serverGrid">
+    <div class="loader"><div class="spinner"></div></div>
+  </div>
+</main>
+
+<!-- ── Toast container ── -->
+<div class="toast-container" id="toastContainer"></div>
+
+<!-- ── Footer ── -->
+<footer>
+  <p>© 2025 <strong>DevCenter Bump</strong> — Propulsé par la communauté Discord 💙</p>
+  <p style="margin-top:.4rem">
+    <a href="https://devcenter24.github.io/devcenter-bump" target="_blank">Ajouter mon serveur</a> ·
+    <a href="#">CGU</a> ·
+    <a href="#">Support</a>
+  </p>
+</footer>
+
+<script>
+  // ── Config ──────────────────────────────────────────────────────────────
+  const SUPABASE_URL = "https://ttuvhluwehuffrlkeyid.supabase.co";
+  const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR0dXZobHV3ZWh1ZmZybGtleWlkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAxNTkwMTcsImV4cCI6MjA5NTczNTAxN30.O-DNNzgkCMtRQifltaGq-tZ0tBm_9a1sNvahkkauXHQ";
+  const CLIENT_ID    = "1486398705551806636";
+  const REDIRECT_URI = "https://devcenter24.github.io/devcenter-bump";
+
+  const HEADERS = {
+    "apikey": SUPABASE_KEY,
+    "Authorization": `Bearer ${SUPABASE_KEY}`,
+    "Content-Type": "application/json"
+  };
+
+  // ── State ────────────────────────────────────────────────────────────────
+  let allServers = [];
+  let activeTag  = "";
+  let searchVal  = "";
+
+  // ── Supabase fetch ───────────────────────────────────────────────────────
+  async function fetchServers() {
+    const url = `${SUPABASE_URL}/rest/v1/servers?select=*&order=last_bumped_at.desc.nullslast`;
+    const r = await fetch(url, { headers: HEADERS });
+    return r.ok ? r.json() : [];
+  }
+
+  async function fetchTodayBumps() {
+    const today = new Date(); today.setHours(0,0,0,0);
+    const url = `${SUPABASE_URL}/rest/v1/bumps?select=id&bumped_at=gte.${today.toISOString()}`;
+    const r = await fetch(url, { headers: HEADERS });
+    if (!r.ok) return 0;
+    const data = await r.json();
+    return data.length;
+  }
+
+  // ── Render ───────────────────────────────────────────────────────────────
+  function timeAgo(iso) {
+    if (!iso) return "jamais";
+    const diff = (Date.now() - new Date(iso)) / 1000;
+    if (diff < 60) return "à l'instant";
+    if (diff < 3600) return `il y a ${Math.floor(diff/60)} min`;
+    if (diff < 86400) return `il y a ${Math.floor(diff/3600)}h`;
+    return `il y a ${Math.floor(diff/86400)}j`;
+  }
+
+  function renderCard(s, i) {
+    const icon = s.icon_url
+      ? `<img src="${s.icon_url}" alt="${s.name}" loading="lazy" />`
+      : `<span>${s.name[0].toUpperCase()}</span>`;
+
+    const tags = (s.tags || []).slice(0, 3).map(t =>
+      `<span class="card-tag">${t}</span>`
+    ).join('');
+
+    return `
+      <article class="server-card" style="animation-delay:${i*60}ms">
+        <div class="card-header">
+          <div class="server-icon">${icon}</div>
+          <div class="card-info">
+            <div class="card-name">${s.name}</div>
+            <div class="card-meta">
+              <span><span class="online-dot"></span>${(s.member_count||0).toLocaleString('fr-FR')} membres</span>
+              <span>🔥 ${s.bump_count||0} bumps</span>
+            </div>
+          </div>
+        </div>
+        <p class="card-desc">${s.description || "Aucune description disponible."}</p>
+        ${tags ? `<div class="card-tags">${tags}</div>` : ''}
+        <div class="card-footer">
+          <span class="bump-info">⏱ Bumpé ${timeAgo(s.last_bumped_at)}</span>
+          <a class="btn-join" href="${s.invite_url}" target="_blank" rel="noopener">Rejoindre →</a>
+        </div>
+      </article>`;
+  }
+
+  function applyFilters() {
+    let list = [...allServers];
+    if (activeTag) list = list.filter(s => (s.tags||[]).includes(activeTag));
+    if (searchVal) {
+      const q = searchVal.toLowerCase();
+      list = list.filter(s =>
+        s.name.toLowerCase().includes(q) ||
+        (s.description||'').toLowerCase().includes(q)
+      );
+    }
+    const grid = document.getElementById('serverGrid');
+    document.getElementById('serverCount').textContent = `${list.length} serveur${list.length!==1?'s':''}`;
+    if (!list.length) {
+      grid.innerHTML = `<div class="empty"><div class="empty-icon">🔭</div><p>Aucun serveur trouvé.</p></div>`;
+      return;
+    }
+    grid.innerHTML = list.map((s,i) => renderCard(s,i)).join('');
+  }
+
+  // ── Stats ────────────────────────────────────────────────────────────────
+  function updateStats(servers, bumpsToday) {
+    const totalMembers = servers.reduce((a, s) => a + (s.member_count||0), 0);
+    document.getElementById('statServers').textContent = servers.length.toLocaleString('fr-FR');
+    document.getElementById('statBumps').textContent   = bumpsToday.toLocaleString('fr-FR');
+    document.getElementById('statMembers').textContent = totalMembers >= 1000
+      ? (totalMembers/1000).toFixed(1)+'K'
+      : totalMembers.toLocaleString('fr-FR');
+  }
+
+  // ── Toast ────────────────────────────────────────────────────────────────
+  function toast(msg, type='success') {
+    const el = document.createElement('div');
+    el.className = `toast ${type}`;
+    el.textContent = msg;
+    document.getElementById('toastContainer').appendChild(el);
+    setTimeout(() => el.remove(), 3500);
+  }
+
+  // ── Init ─────────────────────────────────────────────────────────────────
+  async function init() {
+    const [servers, bumpsToday] = await Promise.all([fetchServers(), fetchTodayBumps()]);
+    allServers = servers;
+    updateStats(servers, bumpsToday);
+    applyFilters();
+  }
+
+  // ── Events ───────────────────────────────────────────────────────────────
+  document.getElementById('searchInput').addEventListener('input', e => {
+    searchVal = e.target.value.trim();
+    applyFilters();
+  });
+
+  document.getElementById('tagsList').addEventListener('click', e => {
+    const tag = e.target.closest('.tag');
+    if (!tag) return;
+    document.querySelectorAll('.tag').forEach(t => t.classList.remove('active'));
+    tag.classList.add('active');
+    activeTag = tag.dataset.tag;
+    applyFilters();
+  });
+
+  // OAuth Discord login
+  document.getElementById('loginBtn').addEventListener('click', () => {
+    const params = new URLSearchParams({
+      client_id: CLIENT_ID,
+      redirect_uri: REDIRECT_URI,
+      response_type: 'code',
+      scope: 'identify guilds',
+    });
+    window.location.href = `https://discord.com/oauth2/authorize?${params}`;
+  });
+
+  init();
+</script>
+</body>
+</html>
